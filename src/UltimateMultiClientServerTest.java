@@ -62,5 +62,4 @@ public class UltimateMultiClientServerTest {
         assertEquals(terminate, "bye");
         client.stopConnection();
     }
-
 }

@@ -9,12 +9,12 @@ public class UltimateMultiClientServer {
 
     private ServerSocket serverSocket;
 
+//    Start server on specific (free) port. Keep connection open.
     public void start(int port) {
         try {
             serverSocket = new ServerSocket(port);
             while (true)
-                new EchoClientHandler(serverSocket.accept()).start();
-
+                new SendMessageToClientHandlerHandler(serverSocket.accept()).start();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -23,9 +23,9 @@ public class UltimateMultiClientServer {
 
     }
 
+//    Stop connection.
     public void stop() {
         try {
-
             serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -33,15 +33,18 @@ public class UltimateMultiClientServer {
 
     }
 
-    private static class EchoClientHandler extends Thread {
+//    For every new client a new thread is made. As long as Client does not send ".",
+//    connection stays open and communication is uphold.
+    private static class SendMessageToClientHandlerHandler extends Thread {
         private Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;
 
-        public EchoClientHandler(Socket socket) {
+        public SendMessageToClientHandlerHandler(Socket socket) {
             this.clientSocket = socket;
         }
 
+        @Override
         public void run() {
             try {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -52,9 +55,9 @@ public class UltimateMultiClientServer {
                         out.println("bye");
                         break;
                     }
+//                    Server simply repeats what client has sent.
                     out.println(inputLine);
                 }
-
                 in.close();
                 out.close();
                 clientSocket.close();
