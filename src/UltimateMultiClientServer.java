@@ -52,10 +52,12 @@ public class UltimateMultiClientServer {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     if (".".equals(inputLine)) {
+                        System.out.println("bye");
                         out.println("bye");
                         break;
                     }
 //                    Server simply repeats what client has sent.
+                    System.out.println(inputLine);
                     out.println(inputLine);
                 }
                 in.close();
